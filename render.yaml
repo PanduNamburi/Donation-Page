@@ -3,7 +3,7 @@ services:
     name: donation-page
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python manage.py runserver 0.0.0.0:$PORT
+    startCommand: ./start.sh
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.0 
