@@ -58,38 +58,143 @@ FSD1/
 └── manage.py              # Django management script
 ```
 
-## 🚀 **Quick Start**
+## 🚀 **Setup Instructions**
 
 ### **Prerequisites**
-- Python 3.8+
+- Python 3.8+ (recommended: Python 3.11+)
 - pip (Python package installer)
+- Git (for cloning the repository)
 
-### **Installation**
+### **Local Development Setup**
+
+#### **Step 1: Clone the Repository**
 ```bash
 # Clone the repository
 git clone https://github.com/PanduNamburi/Donation-Page.git
 cd Donation-Page
+```
 
+#### **Step 2: Set Up Virtual Environment**
+```bash
 # Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Install dependencies
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+# venv\Scripts\activate
+```
+
+#### **Step 3: Install Dependencies**
+```bash
+# Install required packages
 pip install -r requirements.txt
+```
 
-# Run migrations
+#### **Step 4: Database Setup**
+```bash
+# Run database migrations
 python manage.py migrate
 
-# Create superuser (optional)
+# Create a superuser (admin account)
 python manage.py createsuperuser
+# Follow the prompts to create admin credentials
+```
 
-# Start the server
+#### **Step 5: Start the Development Server**
+```bash
+# Start the Django development server
 python manage.py runserver
+
+# The server will start on http://localhost:8000
 ```
 
 ### **Access Points**
 - **Main Application**: `http://localhost:8000`
 - **Admin Panel**: `http://localhost:8000/admin/`
+- **API Base URL**: `http://localhost:8000/api/`
+
+### **Testing the Application**
+
+#### **1. Create a Test Account**
+1. Go to `http://localhost:8000/login/`
+2. Click "Register" to create a new account
+3. Fill in your details and register
+
+#### **2. Explore the Dashboard**
+1. Login with your credentials
+2. You'll be redirected to the dashboard
+3. View your statistics, achievements, and notifications
+
+#### **3. Test Donations**
+1. Go to `http://localhost:8000/donate/`
+2. Use a referral code to make a test donation
+3. Check how it appears in the dashboard
+
+#### **4. View Leaderboard**
+1. Go to `http://localhost:8000/leaderboard-page/`
+2. See the rankings and performance metrics
+
+### **Production Deployment**
+
+#### **Option 1: Render (Recommended)**
+This project is configured for deployment on Render:
+
+1. **Fork/Clone** the repository to your GitHub account
+2. **Connect to Render**:
+   - Go to [render.com](https://render.com)
+   - Create a new Web Service
+   - Connect your GitHub repository
+   - Render will automatically detect the configuration
+
+3. **Environment Variables** (if needed):
+   - `DEBUG`: Set to `False` for production
+   - `SECRET_KEY`: Generate a new secret key for production
+
+4. **Deploy**: Render will automatically build and deploy your application
+
+#### **Option 2: Other Platforms**
+For other platforms (Heroku, Railway, etc.):
+
+1. **Add platform-specific files** (Procfile, runtime.txt, etc.)
+2. **Update ALLOWED_HOSTS** in settings.py
+3. **Set environment variables** for production
+4. **Configure static files** for your platform
+
+### **Troubleshooting**
+
+#### **Common Issues:**
+
+**1. Port Already in Use**
+```bash
+# If port 8000 is busy, use a different port
+python manage.py runserver 8001
+```
+
+**2. Database Migration Errors**
+```bash
+# Reset migrations if needed
+python manage.py makemigrations
+python manage.py migrate
+```
+
+**3. Static Files Not Loading**
+```bash
+# Collect static files
+python manage.py collectstatic
+```
+
+**4. Permission Errors**
+```bash
+# Make scripts executable
+chmod +x build.sh start.sh
+```
+
+#### **Development Tips:**
+- Use `python manage.py shell` for database queries
+- Check logs with `python manage.py runserver --verbosity=2`
+- Use Django admin at `/admin/` for data management
 
 ## 🔧 **API Endpoints**
 
