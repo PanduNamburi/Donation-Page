@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Fundraising Intern Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: #34495e;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .nav-links a.active {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .header-subtitle {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-top: 3px solid #3498db;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leaderboard-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: #2c3e50;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th {
+            background: #34495e;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .leaderboard-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: middle;
+        }
+
+        .leaderboard-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .leaderboard-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank-cell {
+            text-align: center;
+            width: 80px;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .rank-1 .rank-badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #b7791f;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .rank-2 .rank-badge {
+            background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+            color: #666;
+            box-shadow: 0 2px 8px rgba(192, 192, 192, 0.3);
+        }
+
+        .rank-3 .rank-badge {
+            background: linear-gradient(135deg, #cd7f32, #daa952);
+            color: #8b4d1f;
+            box-shadow: 0 2px 8px rgba(205, 127, 50, 0.3);
+        }
+
+        .rank-other .rank-badge {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+
+        .name-cell {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .referral-code {
+            font-family: 'Courier New', monospace;
+            background: #ecf0f1;
+            color: #7f8c8d;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid #d5dbdb;
+            letter-spacing: 0.5px;
+        }
+
+        .donations-cell {
+            font-weight: bold;
+            color: #27ae60;
+            text-align: right;
+            font-size: 1.05rem;
+        }
+
+        .current-user {
+            background-color: #e8f4f8 !important;
+            border-left: 4px solid #3498db;
+        }
+
+        .current-user:hover {
+            background-color: #dff0ff !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .spinner {
+            border: 3px solid #ecf0f1;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #fadbd8;
+            color: #c0392b;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .logout-btn {
+            background: transparent;
+            color: #ecf0f1;
+            border: 1px solid #7f8c8d;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn:hover {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            color: white;
+        }
+
+        .medal-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .header-section {
+                padding: 1.5rem;
+            }
+
+            .header-title {
+                font-size: 1.75rem;
+            }
+
+            .stats-cards {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.25rem;
+            }
+
+            .leaderboard-table {
+                font-size: 0.85rem;
+            }
+
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .referral-code {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.4rem;
+            }
+
+            .section-header {
+                padding: 1rem;
+            }
+
+            /* Stack table cells on very small screens */
+            @media (max-width: 480px) {
+                .leaderboard-table thead {
+                    display: none;
+                }
+
+                .leaderboard-table tbody tr {
+                    display: block;
+                    border: 1px solid #ecf0f1;
+                    border-radius: 8px;
+                    margin-bottom: 1rem;
+                    padding: 1rem;
+                    background: white;
+                }
+
+                .leaderboard-table tbody td {
+                    display: block;
+                    border: none;
+                    padding: 0.5rem 0;
+                    text-align: left !important;
+                }
+
+                .leaderboard-table tbody td:before {
+                    content: attr(data-label) ": ";
+                    font-weight: bold;
+                    color: #7f8c8d;
+                    text-transform: uppercase;
+                    font-size: 0.75rem;
+                    letter-spacing: 0.5px;
+                }
+
+                .rank-cell:before {
+                    content: "Rank: ";
+                }
+
+                .name-cell:before {
+                    content: "Name: ";
+                }
+
+                .referral-code:before {
+                    content: "Code: ";
+                }
+
+                .donations-cell:before {
+                    content: "Raised: ";
+                }
+            }
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus styles for keyboard navigation */
+        .nav-links a:focus,
+        .logout-btn:focus {
+            outline: 2px solid #3498db;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                📊 Fundraising Portal
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                ☰
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="/dashboard/">Dashboard</a>
+                <a href="/leaderboard-page/" class="active">Leaderboard</a>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header-section">
+            <h1 class="header-title">🏆 Fundraising Leaderboard</h1>
+            <p class="header-subtitle">See how you stack up against other fundraising champions</p>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading leaderboard data...</p>
+        </div>
+
+        <div class="error" id="error" style="display: none;">
+            <strong>Error:</strong> Unable to load leaderboard data. Please refresh the page or try again later.
+        </div>
+
+        <div id="leaderboardContent" style="display: none;">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="totalParticipants">0</div>
+                    <div class="stat-label">Total Participants</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="totalRaised">$0</div>
+                    <div class="stat-label">Total Raised</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="avgRaised">$0</div>
+                    <div class="stat-label">Average Raised</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" id="topRaised">$0</div>
+                    <div class="stat-label">Top Fundraiser</div>
+                </div>
+            </div>
+
+            <div class="leaderboard-section">
+                <div class="section-header">
+                    <h2 class="section-title">🥇 Top Fundraisers</h2>
+                </div>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th class="rank-cell">Rank</th>
+                            <th>Name</th>
+                            <th>Referral Code</th>
+                            <th>Donations Raised</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardTable">
+                        <!-- Leaderboard data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API base URL
+        const API_BASE_URL = '/api';
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Fetch leaderboard data from the API
+        async function fetchLeaderboardData() {
+            try {
+                console.log('Fetching leaderboard data...');
+                const response = await fetch(`${API_BASE_URL}/leaderboard/`);
+                
+                console.log('Leaderboard response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch leaderboard data');
+                }
+                
+                const data = await response.json();
+                console.log('Leaderboard data received:', data);
+                displayLeaderboardData(data);
+            } catch (error) {
+                console.error('Error fetching leaderboard data:', error);
+                showError();
+            }
+        }
+
+        // Display the leaderboard data
+        function displayLeaderboardData(data) {
+            console.log('Displaying leaderboard data:', data);
+            
+            // Hide loading and show content
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('leaderboardContent').style.display = 'block';
+
+            if (!data || data.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            // Calculate statistics
+            const totalParticipants = data.length;
+            const totalRaised = data.reduce((sum, intern) => sum + parseFloat(intern.total_donations_raised || 0), 0);
+            const avgRaised = totalParticipants > 0 ? totalRaised / totalParticipants : 0;
+            const topRaised = data.length > 0 ? parseFloat(data[0].total_donations_raised || 0) : 0;
+
+            // Update stats cards
+            document.getElementById('totalParticipants').textContent = totalParticipants.toLocaleString();
+            document.getElementById('totalRaised').textContent = `$${totalRaised.toLocaleString()}`;
+            document.getElementById('avgRaised').textContent = `$${Math.round(avgRaised).toLocaleString()}`;
+            document.getElementById('topRaised').textContent = `$${topRaised.toLocaleString()}`;
+
+            // Populate leaderboard table
+            const tableBody = document.getElementById('leaderboardTable');
+            tableBody.innerHTML = '';
+
+            // Get current user info (if available)
+            const currentUserToken = localStorage.getItem('authToken');
+            let currentUserId = localStorage.getItem('userId');
+
+            data.forEach((intern, index) => {
+                const row = document.createElement('tr');
+                
+                // Determine rank styling
+                let rankClass = 'rank-other';
+                let medalIcon = '';
+                
+                if (index === 0) {
+                    rankClass = 'rank-1';
+                    medalIcon = '🥇';
+                } else if (index === 1) {
+                    rankClass = 'rank-2';
+                    medalIcon = '🥈';
+                } else if (index === 2) {
+                    rankClass = 'rank-3';
+                    medalIcon = '🥉';
+                }
+
+                // Check if this is the current user's row
+                const isCurrentUser = currentUserId && intern.id && intern.id.toString() === currentUserId;
+                if (isCurrentUser) {
+                    row.classList.add('current-user');
+                }
+                
+                row.innerHTML = `
+                    <td class="rank-cell ${rankClass}">
+                        <div class="rank-badge">
+                            ${medalIcon || intern.rank || (index + 1)}
+                        </div>
+                    </td>
+                    <td class="name-cell" data-label="Name">
+                        ${intern.full_name || 'Anonymous'}
+                        ${isCurrentUser ? ' <span style="color: #3498db; font-size: 0.8rem;">(You)</span>' : ''}
+                    </td>
+                    <td data-label="Code">
+                        <span class="referral-code">${intern.referral_code || 'N/A'}</span>
+                    </td>
+                    <td class="donations-cell" data-label="Raised">
+                        $${parseFloat(intern.total_donations_raised || 0).toLocaleString()}
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            const tableBody = document.getElementById('leaderboardTable');
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <p><strong>No participants yet</strong></p>
+                            <p>Be the first to start fundraising!</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        // Show error message
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+        }
+
+        // Logout function
+        async function logout() {
+            if (!confirm('Are you sure you want to logout?')) {
+                return;
+            }
+            
+            try {
+                const token = localStorage.getItem('authToken');
+                await fetch(`${API_BASE_URL}/auth/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                // Clear local storage and redirect
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userId');
+                window.location.href = '/login/';
+            }
+        }
+
+        // Initialize leaderboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Leaderboard page loading...');
+            
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(event) {
+                const navLinks = document.getElementById('navLinks');
+                const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+                
+                if (!navLinks.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
+            
+            // Handle keyboard navigation
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            });
+            
+            // Handle window resize for responsive adjustments
+            window.addEventListener('resize', function() {
+                const navLinks = document.getElementById('navLinks');
+                if (window.innerWidth > 768) {
+                    navLinks.classList.remove('active');
+                }
+            });
+            
+            // Fetch leaderboard data
+            fetchLeaderboardData();
+        });
+
+        // Auto-refresh leaderboard data every 2 minutes
+        setInterval(() => {
+            if (document.getElementById('leaderboardContent').style.display !== 'none') {
+                fetchLeaderboardData();
+            }
+        }, 120000); // 2 minutes
+    </script>
+</body>
+</html>
